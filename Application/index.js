@@ -1,4 +1,5 @@
 "use strict";
-window.onload = function() {
-	alert("hello!!");
-};
+
+$(document).ready(function() {
+	// alert("play the video");
+});

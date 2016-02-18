@@ -7,7 +7,7 @@ body, button {
 	font-family: monofur, monospace;
 }
 
-body > div {
+body > div:nth-child(1) {
 	background-color: rgba(255, 255, 255, .6);
 }
 
