@@ -11,7 +11,7 @@ Demonstration video (coming soon)
 Screenshots (coming soon)
 
 ## Installation
-Detailed steps on installation can be found at the [Installation](https://github.com/zenithlight/eyerobot/wiki/User's-Guide) page on the wiki.
+Detailed steps on installation can be found at the [Installation](https://github.com/zenithlight/eyerobot/wiki/Installation) page on the wiki.
 
 ## Usage
-Refer to the [User's Guide](https://github.com/zenithlight/eyerobot/wiki/Installation) on the wiki for more information.
+Refer to the [User's Guide](https://github.com/zenithlight/eyerobot/wiki/User's-Guide) on the wiki for more information.
