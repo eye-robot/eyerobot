@@ -9,6 +9,8 @@ eyerobot uses a web camera pointed at the outside world, along with an eye-track
 Demonstration video (coming soon)
 
 Screenshots (coming soon)
+![Sphero Robot](https://github.com/zenithlight/eyerobot/blob/master/Sphero.jpg)
+![Sphero Robot with object tracking](https://github.com/zenithlight/eyerobot/blob/master/SpheroTracked.PNG)
 
 ## Installation
 Detailed steps on installation can be found at the [Installation](https://github.com/zenithlight/eyerobot/wiki/Installation) page on the wiki.
