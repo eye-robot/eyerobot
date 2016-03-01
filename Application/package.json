@@ -1,7 +1,0 @@
-{
-	"name": "Eye Robot",
-	"main": "index.html",
-	"window": {
-		"toolbar": true
-	}
-}
