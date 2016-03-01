@@ -1,6 +1,7 @@
 "use strict";
 
 var port = "/dev/tty.Sphero-ORO-AMP-SPP"; // change to the port the sphero is connected to
+// var port = "/COM4";
 
 function orbControl(port, initialColor) {
 	this.port = port;
@@ -67,7 +68,6 @@ function orbControl(port, initialColor) {
 			}
 		}
 		console.log("direction: " + direction);
-		console.log("setting interval...");
 		var boundDirection = direction.bind(this);
 		return boundDirection;
 	};
@@ -114,4 +114,5 @@ function orbControl(port, initialColor) {
 	}
 }
 
-module.exports = new orbControl("/dev/tty.Sphero-ORO-AMP-SPP", "red");
+// module.exports = new orbControl("/dev/tty.Sphero-ORO-AMP-SPP", "red");
+module.exports = new orbControl("/COM4", "red");

@@ -4,14 +4,18 @@ import numpy as np
 import argparse
 import imutils
 import cv2
+import zmq
+import time
 
-# construct the argument parse and parse the arguments
-ap = argparse.ArgumentParser()
-ap.add_argument("-v", "--video",
-	help="path to the (optional) video file")
-ap.add_argument("-b", "--buffer", type=int, default=64,
-	help="max buffer size")
-args = vars(ap.parse_args())
+# setup zmq
+port = 5567;
+context = zmq.Context();
+socket = context.socket(zmq.PUB);
+socket.bind("tcp://*:%s" % port);
+time.sleep(1);
+
+# num points to keep track of
+buffer = 10;
 
 # define the lower and upper boundaries of the "green"
 # ball in the HSV color space, then initialize the
@@ -34,30 +38,31 @@ args = vars(ap.parse_args())
 # colorUpper = (255, 255, 255);
 
 # blue sphero:
-colorLower = (255, 255, 0);
-colorUpper = (255, 255, 255);
+# colorLower = (255, 255, 0);
+# colorUpper = (255, 255, 255);
+colorLower = (0, 2, 107);
+colorUpper = (134, 73, 222);
 
+pts = deque(maxlen=buffer)
 
-pts = deque(maxlen=args["buffer"])
+camera = cv2.VideoCapture(0)
+width = camera.get(3);
+height = camera.get(4);
 
-
-# if a video path was not supplied, grab the reference
-# to the webcam
-if not args.get("video", False):
-	camera = cv2.VideoCapture(0)
-
-# otherwise, grab a reference to the video file
-else:
-	camera = cv2.VideoCapture(args["video"])
-
+count = 0;
+avgx = 0;
+avgy = 0;
+avgr = 0;
+avg = 5;
 # keep looping
 while True:
+	message = "no data";
 	# grab the current frame
 	(grabbed, frame) = camera.read()
 
 	# if we are viewing a video and we did not grab a frame,
 	# then we have reached the end of the video
-	if args.get("video") and not grabbed:
+	if not grabbed:
 		break
 
 	# resize the frame, blur it, and convert it to the HSV
@@ -88,17 +93,34 @@ while True:
 		((x, y), radius) = cv2.minEnclosingCircle(c)
 		M = cv2.moments(c)
 		center = (int(M["m10"] / M["m00"]), int(M["m01"] / M["m00"]))
+		avgx += center[0];
+		avgy += center[1];
+		avgr += radius;
+		count += 1;
 
 		# only proceed if the radius meets a minimum size
 		if radius > 10:
 			# draw the circle and centroid on the frame,
 			# then update the list of tracked points
-			cv2.circle(frame, (int(x), int(y)), int(radius),
-				(0, 255, 255), 2)
-			cv2.circle(frame, center, 5, (0, 0, 255), -1)
+			if count >= avg:	
+				avgx = int(float(avgx) / avg);
+				avgy = int(float(avgy) / avg);
+				avgr = int(float(avgr) / avg);
 
-	# update the points queue
-	pts.appendleft(center)
+				cv2.circle(frame, (avgx, avgy), 5, (255, 0, 0), -1)
+
+				count = 0;
+				# update the points queue
+				pts.appendleft((avgx, avgy));
+				ratioX = float(avgx) / width;
+				ratioY = float(avgy) / height;
+				message = str(ratioX) + "," + str(ratioY);
+				avgx = 0;
+				avgy = 0;
+				avgr = 0;
+			# cv2.circle(frame, center, 5, (0, 255, 0), -1)
+			# cv2.circle(frame, (int(x), int(y)), int(radius),
+				# (0, 255, 255), 1);
 
 	# loop over the set of tracked points
 	for i in xrange(1, len(pts)):
@@ -109,13 +131,14 @@ while True:
 
 		# otherwise, compute the thickness of the line and
 		# draw the connecting lines
-		thickness = int(np.sqrt(args["buffer"] / float(i + 1)) * 2.5)
+		thickness = int(np.sqrt(buffer / float(i + 1)) * 2.5)
 		cv2.line(frame, pts[i - 1], pts[i], (0, 0, 255), thickness)
 
 	# show the frame to our screen
 	cv2.imshow("Frame", frame)
 	key = cv2.waitKey(1) & 0xFF
-
+	print("Sending message: " + message);
+	socket.send(message);
 	# if the 'q' key is pressed, stop the loop
 	if key == ord("q"):
 		break
