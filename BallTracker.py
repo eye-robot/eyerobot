@@ -40,8 +40,13 @@ buffer = 10;
 # blue sphero:
 # colorLower = (255, 255, 0);
 # colorUpper = (255, 255, 255);
-colorLower = (0, 2, 107);
-colorUpper = (134, 73, 222);
+
+# red sphero:
+# colorLower = (0, 2, 107);
+# colorUpper = (134, 73, 222);
+
+colorLower = (200, 200, 200);
+colorUpper = (255, 255, 255);
 
 pts = deque(maxlen=buffer)
 
@@ -53,7 +58,7 @@ count = 0;
 avgx = 0;
 avgy = 0;
 avgr = 0;
-avg = 5;
+avg = 1;
 # keep looping
 while True:
 	message = "no data";
