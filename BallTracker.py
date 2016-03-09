@@ -8,7 +8,7 @@ import zmq
 import time
 
 # setup zmq
-port = 5567;
+port = 4902;
 context = zmq.Context();
 socket = context.socket(zmq.PUB);
 socket.bind("tcp://*:%s" % port);
@@ -143,7 +143,7 @@ while True:
 	cv2.imshow("Frame", frame)
 	key = cv2.waitKey(1) & 0xFF
 	print("Sending message: " + message);
-	socket.send(message);
+	socket.send_multipart(('ball', message));
 	# if the 'q' key is pressed, stop the loop
 	if key == ord("q"):
 		break

@@ -43,7 +43,7 @@ function orbControl(port, initialColor) {
 			// direction = 180 * Math.asin(y / h) / Math.PI;			
 		// }
 		var direction = 180 * Math.atan2(y, x) / Math.PI;
-		var convertedDir = convertDegrees(direction);
+		var convertedDir = this.convertDegrees(direction);
 		console.log("x = " + x);
 		console.log("y = " + y);
 		console.log("direction = " + direction);
