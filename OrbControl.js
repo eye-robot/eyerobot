@@ -48,13 +48,13 @@ function orbControl(port, initialColor) {
 		console.log("y = " + y);
 		console.log("direction = " + direction);
 		console.log("converted direction = " + convertedDir);
-		this.orb.roll(this.speed, convertedDir);
+		// this.orb.roll(this.speed * h, convertedDir);
 	};
 
 	// converts between actual degrees and the Sphero's
 	// messed up version of degrees
 	this.convertDegrees = function(x) {
-		return (360 - (x - 90)) % 365;
+		return (360 - (x - 90)) % 360;
 	};
 
 	// rolls sphero in a direction based on x/y coordinates of
