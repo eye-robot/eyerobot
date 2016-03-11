@@ -2,11 +2,12 @@
     "name": "eyerobot",
     "version": "0.0.1",
     "homepage": "https://github.com/zenithlight/eyerobot",
-    "repository": {"type": "git", "url": "https://github.com/zenithlight/eyerobot.git"},
+    "repository": { "type": "git", "url": "https://github.com/zenithlight/eyerobot.git" },
     "dependencies": {
-        "nw": "latest",
-        "zmq": "latest",
-        "sphero": "latest"
+        "nw": "0.12.3",
+        "zmq": "*",
+        "sphero": "*",
+        "nw-gyp": "*"
     },
     "main": "html/index.html",
     "license": "MIT",
