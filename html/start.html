@@ -5,7 +5,7 @@
         <link rel="stylesheet" type="text/css" href="../static/style.css">
     </head>
     <body>
-        <iframe id="video"></iframe>
+        <video id="videoelt" autoplay="true"></video>
         <div id="status">
             Sphero: <span id="sphero">Not connected.</span><br>
             Pupil: <span id="pupil">Not connected.</span><br>
@@ -13,7 +13,8 @@
             Gaze X: <span id="gazex">N/A</span>, Gaze Y: <span id="gazey">N/A</span><br>
             Ball X: <span id="ballx">N/A</span>, Ball Y: <span id="bally">N/A</span><br>
             <button id="start">Start Sphero Calibration</button><br>
-            <button id="stop">Stop Sphero Calibration</button>
+            <button id="stop">Stop Sphero Calibration</button><br>
+            Video source: <select id="source"></select>
         </div>
         <img src="../static/1.png" id="one" width="150">
         <img src="../static/2.png" id="two" width="150">

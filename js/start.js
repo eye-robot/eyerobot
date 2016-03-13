@@ -133,8 +133,8 @@ document.body.onkeypress = function(e) {
 };
 
 function setWindow() {
-    document.getElementById('video').width = window.innerWidth;
-    document.getElementById('video').height = window.innerHeight;
+    document.getElementById('videoelt').width = window.innerWidth;
+    document.getElementById('videoelt').height = window.innerHeight;
 
     document.getElementById('status').style.width = window.innerWidth + 'px';
     document.getElementById('status').style.height = window.innerHeight + 'px';
@@ -143,4 +143,41 @@ function setWindow() {
 window.onresize = setWindow;
 setWindow();
 
-document.getElementById('video').src = 'http://' + localStorage.getItem('vip') + ':' + localStorage.getItem('vport');
+function handleVideo(stream) {
+    document.getElementById('videoelt').src = window.URL.createObjectURL(stream);
+}
+
+function getVideo() {
+    if (window.stream) {
+        document.getElementById('videoelt').src = null;
+    }
+
+    var source = document.getElementById('source').value;
+
+    navigator.webkitGetUserMedia({
+        video: {
+            optional: [{
+                sourceId: source
+            }]
+        }
+    }, handleVideo, function() {});
+}
+
+MediaStreamTrack.getSources(function(sources) {
+    for (var i = 0; i < sources.length; i++) {
+        var sourceItem = sources[i];
+
+        var option = document.createElement('option');
+
+        option.value = sourceItem.id;
+
+        if (sourceItem.kind === 'video') {
+            option.text = sourceItem.label;
+            document.getElementById('source').appendChild(option);
+        }
+    }
+});
+
+getVideo()
+
+document.getElementById('source').onchange = getVideo;
