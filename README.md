@@ -6,12 +6,6 @@ Developed by Alexis Anand, Jake Carlson, and Kendall Sahl at the University of W
 ## About
 eyerobot uses a web camera pointed at the outside world, along with an eye-tracking headset to get the user's gaze position on a real-time image of the robot's environment. eyerobot rolls the Sphero, using the gaze position as the destination.
 
-Demonstration video (coming soon)
-
-Screenshots (coming soon)
-![Sphero Robot](http://zenithlight.github.io/eyerobot/Sphero.jpg)
-![Sphero Robot with object tracking](http://zenithlight.github.io/eyerobot/SpheroTracked.PNG)
-
 ## Installation
 Detailed steps on installation can be found at the [Installation](https://github.com/zenithlight/eyerobot/wiki/Installation) page on the wiki.
 
