@@ -1,4 +1,4 @@
-var SPEED = 255;
+var SPEED = 75;
 
 var serialport = require('serialport');
 var string_decoder = require('string_decoder');
@@ -40,7 +40,7 @@ pupilSocket.on('connect', function() {
 pupilSocket.on('message', function(topic, message) {
     message = JSON.parse(decoder.write(message));
 
-    if (message.surfaces && message.surfaces[localStorage.getItem('surface')] && spheroConnected && trackerConnected) {
+    if (message.surfaces && message.surfaces[localStorage.getItem('surface')] && spheroConnected) {
         gazeX = message.surfaces[localStorage.getItem('surface')][0];
         gazeY = message.surfaces[localStorage.getItem('surface')][1];
     }
@@ -96,12 +96,18 @@ function update() {
     document.getElementById('ballx').innerHTML = spheroX;
     document.getElementById('bally').innerHTML = spheroY;
     
-    if (spheroActive) {
-        document.getElementById('sphero').innerHTML = 'Active!'
-        orb.rollTowards(spheroX, spheroY, gazeX, gazeY);
+    if (spheroActive && spheroConnected) {
+        document.getElementById('sphero').innerHTML = 'Active!';
+        orb.rollTowards(spheroX, spheroY, gazeX, 1 - gazeY);
+    }
+    else if (spheroActive && !spheroConnected) {
+        document.getElementById('sphero').innerHTML = 'Active, but not connected.';
+    }
+    else if (!spheroActive && spheroConnected) {
+        document.getElementById('sphero').innerHTML = 'Inactive.';
     }
     else {
-        document.getElementById('sphero').innerHTML = 'Inactive.'
+        document.getElementById('sphero').innerHTML = 'Disconnected.';
     }
 };
 
@@ -110,26 +116,21 @@ document.getElementById('stop').style.display = 'none';
 document.getElementById('start').onclick = function() {
     document.getElementById('start').style.display = 'none';
     document.getElementById('stop').style.display = 'initial';
-    orb.startCalibration();
+    orb.orb.startCalibration();
 };
 
 document.getElementById('stop').onclick = function() {
     document.getElementById('start').style.display = 'initial';
     document.getElementById('stop').style.display = 'none';
-    orb.finishCalibration();
+    orb.orb.finishCalibration();
 };
 
-setInterval(update, 250);
-
-document.body.onmousemove = function(e) {
-    if (localStorage.getItem('mouse') == 'enable') {
-        gazeX = e.clientX / window.innerWidth;
-        gazeY = e.clientY / window.innerHeight;
-    }
-};
+setInterval(update, 500);
 
 document.body.onkeypress = function(e) {
-    spheroActive = !spheroActive; 
+    if (String.fromCharCode(e.keyCode) === 'a') {
+        spheroActive = !spheroActive; 
+    }
 };
 
 function setWindow() {
@@ -145,11 +146,13 @@ setWindow();
 
 function handleVideo(stream) {
     document.getElementById('videoelt').src = window.URL.createObjectURL(stream);
+    window.stream = stream;
 }
 
 function getVideo() {
     if (window.stream) {
         document.getElementById('videoelt').src = null;
+        window.stream.stop();
     }
 
     var source = document.getElementById('source').value;
@@ -181,3 +184,10 @@ MediaStreamTrack.getSources(function(sources) {
 getVideo()
 
 document.getElementById('source').onchange = getVideo;
+
+document.body.onmousemove = function(e) {
+    if (localStorage.getItem('mouse') == 'enable') {
+        gazeX = e.pageX / window.innerWidth;
+        gazeY = e.pageY / window.innerHeight;
+    }
+};
